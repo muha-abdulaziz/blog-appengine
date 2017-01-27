@@ -1,0 +1,31 @@
+{% extends "base.html"%} 
+{% block style %}
+textarea {
+    height:300px;
+    width: 35%;
+    font-family: monospace;}
+
+.error{color:red;}
+
+.sub-but{display: block;}
+{% endblock %}
+
+{% block content %}
+<h2>New Post</h2>
+
+<form method="post">
+    <label>
+        <h3>subject</h3>
+        <input name="subject" vlaue="{{subject}}">
+    </label>
+
+    <label>
+        <h3>content</h3>
+        <textarea name="content">{{content}}</textarea>
+    </label>
+
+    <div class="error">{{error}}</div>
+
+    <button class="sub-but">submit</button>
+</form>
+{% endblock %}
