@@ -255,14 +255,31 @@ class Login(Handler):
         self.render_login()
     
     def post(self):
+        # i for input
         i_username = self.request.get("username")
         i_pw = self.request.get("pw")
 
-        if i_username:
-            query = "SELECT * FROM UserInfo ;".format(i_username)
-            find_username = db.GqlQuery(query)
-            for username in find_username:
-                print find_username
+        def success(user_id):
+            cookie_str = make_secure_val(user_id)
+            self.response.headers.add_header('Set-Cookie', 'user_id={0}'.format(cookie_str))
+            self.redirect('/blog/welcome')
+        
+        def error_msg():
+            error = "Invalid username or password"
+            self.render_login(i_username, error)
+
+        if i_username and i_pw:
+            query = "SELECT * FROM UserInfo WHERE username='{0}';".format(i_username)
+            find_username = db.GqlQuery(query).get()
+            pw_hash = find_username.password
+            
+            if valid_pw(i_username, i_pw, pw_hash):
+                user_id = str(find_username.key().id())
+                success(user_id)
+            else:
+                error_msg()
+        else:
+            error_msg()
 ######################################################################
 ########################### welcome page #############################
 class Welcome(Handler):
