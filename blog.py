@@ -295,11 +295,17 @@ class Welcome(Handler):
             self.write("Welcome {0}".format(user_info.username))
         else:
             self.redirect('/blog/signup')
-
+######################################################################
+########################### logOut page ##############################
+class Logout(Handler):
+    def get(self):
+        self.response.headers.add_header('Set-Cookie', "user_id='';path=/")
+        self.redirect('/blog/signup')
 
 app = webapp2.WSGIApplication([('/blog/?',MainPage),\
                                ('/blog/newpost', NewPost),\
                                ('/blog/(\d+)', SinglePost),\
                                ('/blog/signup', SignUp),\
                                ('/blog/welcome', Welcome),\
-                               ('/blog/login', Login)], debug=True)
+                               ('/blog/login', Login),\
+                               ('/blog/logout', Logout)], debug=True)
